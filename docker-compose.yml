@@ -1,0 +1,31 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "3000:3000"
+    environment:
+      MYSQL_HOST: db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: 'carlos89' # Your MySQL root password
+      MYSQL_DATABASE: cardb
+    depends_on:
+      - db
+    volumes:
+      - ./backend:/usr/src/app # Mount the backend directory
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: 'carlos89' # Your MySQL root password
+    volumes:
+      - db_data:/var/lib/mysql
+
+  frontend:
+    build: ./car-app-frontend
+    ports:
+      - "80:80"  # Map host port 80 to container port 80
+    depends_on:
+      - backend
+
+volumes:
+  db_data:

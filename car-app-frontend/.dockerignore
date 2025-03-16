@@ -1,0 +1,25 @@
+# Ignore everything
+*
+# Except the following:
+!Dockerfile
+!package.json
+!package-lock.json
+!src/
+!nginx/
+!public/
+!*.html
+!*.js
+!*.jsx
+!*.ts
+!*.tsx
+!*.json
+!*.css
+!*.scss
+!*.sass
+!*.svg
+!*.png
+!*.jpg
+!*.jpeg
+!*.gif
+!*.webp
+!*.ico
