@@ -29,3 +29,4 @@ COPY nginx/default.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
 
 # The default command for nginx is to start it (no need for CMD)
+
