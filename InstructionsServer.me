@@ -1,0 +1,126 @@
+Connect to Server:
+You successfully connected to your Ubuntu server via SSH:
+ssh elite01@192.168.3.27
+Use code with caution.
+Bash
+Update Server Packages:
+Ensured your server's package list and installed packages were up-to-date:
+sudo apt update
+sudo apt upgrade
+Use code with caution.
+Bash
+Install Essential Dependencies:
+Installed Node.js, npm (Node Package Manager), the MySQL client tools, and Git:
+sudo apt install nodejs npm mysql-client git
+Use code with caution.
+Bash
+Create Web Directory:
+The standard /var/www/ directory didn't exist, so we created it:
+sudo mkdir /var/www
+Use code with caution.
+Bash
+Navigate to Web Directory:
+Changed into the newly created web directory:
+cd /var/www/
+Use code with caution.
+Bash
+Clone the Application Repository:
+Downloaded your project code from GitHub into a directory named fullstackmysql:
+sudo git clone https://github.com/carlos-roque/FullStackMysql.git fullstackmysql
+Use code with caution.
+Bash
+Set Correct Ownership:
+Changed the ownership of the downloaded code from root to your user (elite01) for easier management:
+sudo chown -R elite01:elite01 fullstackmysql
+Use code with caution.
+Bash
+(Note: Replace elite01:elite01 if your username is different)
+Navigate into Project Root:
+Changed into the main directory of your cloned project:
+cd fullstackmysql
+Use code with caution.
+
+
+
+Phase 1: Prerequisites & Setup
+Navigate to Project Directory: Ensure you are in the directory containing your docker-compose.yml file.
+cd /var/www/fullstackmysql
+Use code with caution.
+Bash
+Check Docker Installation: Verify Docker Engine is installed.
+docker --version
+Use code with caution.
+Bash
+(If not installed, use sudo apt update && sudo apt install docker.io -y on Debian/Ubuntu).
+Check/Install Docker Compose:
+Check for V2 plugin: docker compose version (Failed in your case)
+Check for V1 standalone: docker-compose --version (Failed in your case)
+Install V1 standalone (since V2 plugin wasn't found easily):
+sudo apt update
+sudo apt install docker-compose -y
+Use code with caution.
+Bash
+Verify V1 installation:
+docker-compose --version
+Use code with caution.
+Bash
+Fix Docker Permissions: Add your user to the docker group to run commands without sudo.
+sudo usermod -aG docker $USER
+Use code with caution.
+Bash
+---> IMPORTANT <---: You MUST log out and log back in or use newgrp docker in a new shell for this change to take effect.
+Verify Docker Permissions (Post Login/newgrp): Run a Docker command without sudo.
+docker ps
+Use code with caution.
+Bash
+(Should run without permission errors).
+Phase 2: Building and Running the Application
+Build Docker Images: Create the images for your services based on Dockerfiles and docker-compose.yml.
+docker-compose build
+Use code with caution.
+Bash
+Start Services: Create and start the containers in detached mode (background).
+docker-compose up -d
+Use code with caution.
+Bash
+Check Running Containers: Verify all services (frontend, backend, db) are running and view port mappings.
+docker ps
+Use code with caution.
+Bash
+(We saw frontend on port 80, backend on 8080).
+Phase 3: Troubleshooting & Fixing the Database
+Test Application: Access the frontend in your browser (e.g., http://<your_server_ip>).
+(Observed: Frontend loaded but showed "Failed to add car").
+Check Backend Logs: Look for errors in the service connecting to the database.
+docker-compose logs backend
+Use code with caution.
+Bash
+(Found: Error: Unknown database 'cardb').
+Connect to Database Container: Use docker-compose exec to run the mysql client inside the db container.
+docker-compose exec db mysql -u root -p
+Use code with caution.
+Bash
+(Enter the password 'carlos89' when prompted).
+Manually Create Database (Inside MySQL Prompt): The logs showed the DB was missing, so create it.
+mysql> SHOW DATABASES;  -- (Confirmed 'cardb' was missing)
+mysql> CREATE DATABASE IF NOT EXISTS cardb;
+mysql> USE cardb;
+Use code with caution.
+SQL
+Manually Create Table (Inside MySQL Prompt): The next likely error would be a missing table. Create it.
+mysql> CREATE TABLE IF NOT EXISTS cars (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    car_name VARCHAR(255) NOT NULL,
+    model VARCHAR(255) NOT NULL
+);
+Use code with caution.
+SQL
+Optional: Add Test Data (Inside MySQL Prompt):
+mysql> INSERT INTO cars (car_name, model) VALUES ('Test', 'Car');
+Use code with caution.
+SQL
+Exit MySQL:
+mysql> exit;
+Use code with caution.
+SQL
+Phase 4: Verification
